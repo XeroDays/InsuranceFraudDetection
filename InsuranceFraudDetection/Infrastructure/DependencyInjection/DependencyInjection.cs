@@ -2,6 +2,7 @@ using InsuranceFraudDetection.Application.Claims.Interfaces;
 using InsuranceFraudDetection.Application.Claims.Services;
 using InsuranceFraudDetection.Application.Interfaces;
 using InsuranceFraudDetection.Infrastructure.Data;
+using InsuranceFraudDetection.Infrastructure.Logging;
 using InsuranceFraudDetection.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,9 @@ namespace InsuranceFraudDetection.Infrastructure.DependencyInjection
 
             services.AddScoped<IClaimRepository, ClaimRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            // Add custom logging
+            services.AddCustomLogging();
 
             return services;
         }
