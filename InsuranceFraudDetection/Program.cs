@@ -3,11 +3,13 @@ using InsuranceFraudDetection.Presentation.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using InsuranceFraudDetection.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using InsuranceFraudDetection.Infrastructure.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 
 builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
@@ -54,5 +56,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
+app.MapHub<FraudDetectionHub>("/fraudDetectionHub");
 
 app.Run();

@@ -41,7 +41,7 @@ namespace InsuranceFraudDetection.Presentation.Controllers
             };
 
             var result = await _claimService.SubmitClaimAsync(command);
-            return RedirectToAction(nameof(Success), new { id = result.Id });
+            return RedirectToAction(nameof(Index) );
         }
 
         public async Task<IActionResult> Details(int id)
@@ -53,12 +53,6 @@ namespace InsuranceFraudDetection.Presentation.Controllers
             }
 
             return View(claim);
-        }
-
-        public IActionResult Success(int id)
-        {
-            ViewBag.ClaimId = id;
-            return View();
-        }
+        } 
     }
 }
