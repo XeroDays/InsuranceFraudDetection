@@ -37,7 +37,7 @@ jobs:
           server: ${{ env.FTP_SERVER }}
           username: ${{ env.FTP_USERNAME }}
           password: ${{ env.FTP_PASSWORD }}
-          server-dir: api.softasium.com/
+          server-dir: sayedtest.softasium.com/
           local-dir: ./publish/
 
       - name: Deployment completed 🖥
@@ -45,5 +45,5 @@ jobs:
   
       - name: Health Check ✅
         run: |
-          curl -A "Mozilla/5.0" -X GET https://api.softasium.com/api/systemservice/health
+          curl -A "Mozilla/5.0" -X GET https://sayedtest.softasium.com/api/health
         continue-on-error: true
