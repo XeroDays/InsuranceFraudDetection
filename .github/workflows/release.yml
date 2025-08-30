@@ -16,22 +16,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup .NET 📦
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install dependencies 📂
+      - name: Install dependencies
         run: dotnet restore InsuranceFraudDetection/InsuranceFraudDetection.csproj
-        
-      - name: Build 🧱
+
+      - name: Send shutdown request
+        run: |
+          curl -A "Mozilla/5.0" -X GET https://sayedtest.softasium.com/api/health/shutdown
+        continue-on-error: true
+
+      - name: Build
         run: dotnet build InsuranceFraudDetection/InsuranceFraudDetection.csproj --configuration Release --no-restore
 
-      - name: Publish 📦
+      - name: Publish
         run: dotnet publish InsuranceFraudDetection/InsuranceFraudDetection.csproj -c Release -o ./publish --self-contained true -r linux-x64
  
           
-      - name: Upload to FTP 📤
+      - name: Upload to FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ env.FTP_SERVER }}
@@ -40,10 +45,10 @@ jobs:
           server-dir: sayedtest.softasium.com/
           local-dir: ./publish/
 
-      - name: Deployment completed 🖥
+      - name: Deployment completed
         run: echo "Deployment completed successfully"
   
-      - name: Health Check ✅
+      - name: Health Check
         run: |
           curl -A "Mozilla/5.0" -X GET https://sayedtest.softasium.com/api/health
         continue-on-error: true
