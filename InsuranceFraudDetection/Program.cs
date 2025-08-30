@@ -29,8 +29,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<InsuranceDbContext>();
     try
     {
-        context.Database.Migrate();
-        Console.WriteLine("Database migrations applied successfully.");
+        context.Database.Migrate(); 
     }
     catch (Exception ex)
     {
@@ -38,7 +37,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (app.Environment.IsDevelopment())
+if (true)
 {
     app.UseSwagger();
     app.UseSwaggerUI();

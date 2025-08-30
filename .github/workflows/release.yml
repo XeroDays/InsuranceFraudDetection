@@ -28,7 +28,7 @@ jobs:
         run: dotnet build InsuranceFraudDetection/InsuranceFraudDetection.csproj --configuration Release --no-restore
 
       - name: Publish 📦
-        run: dotnet publish InsuranceFraudDetection/InsuranceFraudDetection.csproj -c Release -o ./publish
+        run: dotnet publish InsuranceFraudDetection/InsuranceFraudDetection.csproj -c Release -o ./publish --self-contained true -r linux-x64
  
           
       - name: Upload to FTP 📤
