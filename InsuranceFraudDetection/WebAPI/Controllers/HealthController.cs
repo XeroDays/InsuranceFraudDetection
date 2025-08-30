@@ -19,12 +19,12 @@ namespace InsuranceFraudDetection.WebAPI.Controllers
         }
  
 
-        [HttpPost("shutdown")]
+        [HttpGet("shutdown")]
         public ActionResult<string> ShutdownServer()
         { 
-            _hostApplicationLifetime.StopApplication();
+            _hostApplicationLifetime.StopApplication(); 
             
-            return Ok("Server shutdown initiated");
+            return Ok();
         }
 
         [HttpGet("logs")]
