@@ -28,6 +28,10 @@ A comprehensive .NET 9.0 application for detecting and managing insurance fraud 
 - **Automated Builds**: Continuous integration with automated testing
 - **Deployment Automation**: Streamlined deployment process
 
+## 🔄 Custom Logger
+- **UnCaught Exception Handling**: Custom logger is capturing all uncuaght exceptions
+- **Middleware Logging**: All requests are logged with middleware
+
 
 
 # 🛠️ Technology Stack
