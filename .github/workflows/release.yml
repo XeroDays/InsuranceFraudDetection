@@ -1,0 +1,49 @@
+name: Build and Deploy Insurance Fraud Detection
+
+on:
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  FTP_SERVER: ${{ secrets.SERVER_IP }}
+  FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+  FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET 📦
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies 📂
+        run: dotnet restore InsuranceFraudDetection/InsuranceFraudDetection.csproj
+        
+      - name: Build 🧱
+        run: dotnet build InsuranceFraudDetection/InsuranceFraudDetection.csproj --configuration Release --no-restore
+
+      - name: Publish 📦
+        run: dotnet publish InsuranceFraudDetection/InsuranceFraudDetection.csproj -c Release -o ./publish
+ 
+          
+      - name: Upload to FTP 📤
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ env.FTP_SERVER }}
+          username: ${{ env.FTP_USERNAME }}
+          password: ${{ env.FTP_PASSWORD }}
+          server-dir: api.softasium.com/
+          local-dir: ./publish/
+
+      - name: Deployment completed 🖥
+        run: echo "Deployment completed successfully"
+  
+      - name: Health Check ✅
+        run: |
+          curl -A "Mozilla/5.0" -X GET https://api.softasium.com/api/systemservice/health
+        continue-on-error: true
