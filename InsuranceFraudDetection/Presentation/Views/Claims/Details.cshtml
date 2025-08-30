@@ -1,0 +1,62 @@
+@model InsuranceFraudDetection.Application.Claims.Models.ClaimViewModel
+
+@{
+    ViewData["Title"] = "Claim Details";
+}
+
+<div class="container mt-4">
+    <h2>Claim Details</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="row">
+                <dt class="col-sm-4">Claim ID:</dt>
+                <dd class="col-sm-8">@Model.Id</dd>
+                
+                <dt class="col-sm-4">Claim Type:</dt>
+                <dd class="col-sm-8">@Model.ClaimType</dd>
+                
+                <dt class="col-sm-4">Amount:</dt>
+                <dd class="col-sm-8">@Model.Amount.ToString("C")</dd>
+                
+                <dt class="col-sm-4">Date Filed:</dt>
+                <dd class="col-sm-8">@Model.DateFiled.ToString("MM/dd/yyyy")</dd>
+                
+                <dt class="col-sm-4">Status:</dt>
+                <dd class="col-sm-8">
+                    <span class="badge @(Model.Status.ToLower() switch {
+                        "pending" => "bg-warning",
+                        "approved" => "bg-success",
+                        "rejected" => "bg-danger",
+                        _ => "bg-secondary"
+                    })">
+                        @Model.Status
+                    </span>
+                </dd>
+                
+                
+                <dt class="col-sm-4">Created At:</dt>
+                <dd class="col-sm-8">@Model.CreatedAt.ToString("MM/dd/yyyy HH:mm")</dd>
+            </dl>
+
+            <div class="col-md-8 " style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 10px;">
+                <h4>User Details</h4>
+                <dl class="row">    
+                    <dt class="col-sm-4">User ID:</dt>
+                    <dd class="col-sm-8">@(Model.UserId?.ToString() ?? "Anonymous")</dd>
+
+                     <dt class="col-sm-4">User Name:</dt>
+                    <dd class="col-sm-8">@Model.UserName</dd>
+
+                      <dt class="col-sm-4">User Email:</dt>
+                    <dd class="col-sm-8">@Model.UserEmail</dd>
+                </dl>
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a> 
+    </div>
+</div>

@@ -1,0 +1,44 @@
+@model InsuranceFraudDetection.Presentation.Models.SubmitClaimViewModel
+
+@{
+    ViewData["Title"] = "Submit Claim";
+}
+
+<div class="container mt-4">
+    <h2>Submit New Claim</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Submit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+                <div class="mb-3">
+                    <label asp-for="ClaimType" class="form-label"></label>
+                    <input asp-for="ClaimType" class="form-control" />
+                    <span asp-validation-for="ClaimType" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Amount" class="form-label"></label>
+                    <input asp-for="Amount" class="form-control" type="number" step="0.01" min="0.01" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="UserId" class="form-label"></label>
+                    <input asp-for="UserId" class="form-control" type="number" min="1" placeholder="Leave empty for anonymous claim" />
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                    <small class="form-text text-muted">Enter a user ID if you have one, or leave empty to submit an anonymous claim</small>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit Claim</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

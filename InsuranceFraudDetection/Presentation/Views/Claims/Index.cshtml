@@ -1,0 +1,60 @@
+@model IEnumerable<InsuranceFraudDetection.Application.Claims.Models.ClaimViewModel>
+@{
+    ViewData["Title"] = "All Claims"; 
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>All Claims</h1>
+    <a asp-action="Submit" class="btn btn-primary">Initiate Fraud Detection Workflow (Real-Time)</a>
+    <a asp-action="Submit" class="btn btn-primary">Submit New Claim</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No claims found. <a asp-action="Submit">Submit your first claim</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Claim Type</th>
+                    <th>Amount</th>
+                    <th>Date Filed</th>
+                    <th>Status</th>
+                    <th>User</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var claim in Model)
+                {
+                    <tr>
+                        <td>@claim.Id</td>
+                        <td>@claim.ClaimType</td>
+                        <td>@claim.Amount.ToString("C")</td>
+                        <td>@claim.DateFiled.ToString("MM/dd/yyyy")</td>
+                        <td>
+                            <span class="badge @(claim.Status.ToLower() switch {
+                                "pending" => "bg-warning",
+                                "approved" => "bg-success",
+                                "rejected" => "bg-danger",
+                                _ => "bg-secondary"
+                            })">
+                                @claim.Status
+                            </span>
+                        </td>
+                        <td>@claim.UserName</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@claim.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
