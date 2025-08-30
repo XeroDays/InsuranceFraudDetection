@@ -2,6 +2,7 @@ using InsuranceFraudDetection.Application.Claims.Interfaces;
 using InsuranceFraudDetection.Application.Claims.Services;
 using InsuranceFraudDetection.Application.Interfaces;
 using InsuranceFraudDetection.Infrastructure.Data;
+using InsuranceFraudDetection.Infrastructure.Logging;
 using InsuranceFraudDetection.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,15 +17,31 @@ namespace InsuranceFraudDetection.Infrastructure.DependencyInjection
             services.AddDbContext<InsuranceDbContext>(options =>
                 options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IClaimRepository, ClaimRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            // Register repositories with ICustomLogger dependency
+            services.AddScoped<IClaimRepository>(provider => 
+                new ClaimRepository(
+                    provider.GetRequiredService<InsuranceDbContext>(),
+                    provider.GetRequiredService<ICustomLogger>()
+                ));
+            
+            services.AddScoped<IUserRepository>(provider => 
+                new UserRepository(
+                    provider.GetRequiredService<InsuranceDbContext>(),
+                    provider.GetRequiredService<ICustomLogger>()
+                ));
 
             return services;
         }
 
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IClaimService, ClaimService>();
+            // Register ClaimService with ICustomLogger dependency
+            services.AddScoped<IClaimService>(provider => 
+                new ClaimService(
+                    provider.GetRequiredService<IClaimRepository>(),
+                    provider.GetRequiredService<IUserRepository>(),
+                    provider.GetRequiredService<ICustomLogger>()
+                ));
 
             return services;
         }

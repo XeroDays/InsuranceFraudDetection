@@ -1,12 +1,16 @@
+using InsuranceFraudDetection.BackgroundServices;
+using InsuranceFraudDetection.Infrastructure.Data;
 using InsuranceFraudDetection.Infrastructure.DependencyInjection;
+using InsuranceFraudDetection.Infrastructure.Logging;
+using InsuranceFraudDetection.Infrastructure.Middleware;
+using InsuranceFraudDetection.Infrastructure.SignalR.Hubs;
 using InsuranceFraudDetection.Presentation.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
-using InsuranceFraudDetection.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using InsuranceFraudDetection.Infrastructure.SignalR.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCustomLogger(builder.Configuration);
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
@@ -15,7 +19,7 @@ builder.Services.Configure<RazorViewEngineOptions>(options =>
 {
     options.ViewLocationExpanders.Add(new PresentationLocationExpander());
 });
-
+builder.Services.AddSingleton<IBackgroundTaskQueue>(provider => new BackgroundTaskQueue(capacity: builder.Configuration.GetValue<int>("EmailSettings:MaxQueueDepth"), logger: provider.GetRequiredService<ILogger<BackgroundTaskQueue>>()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -30,6 +34,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         context.Database.Migrate(); 
+        
     }
     catch (Exception ex)
     {
@@ -43,11 +48,13 @@ if (true)
     app.UseSwaggerUI();
 }
 
+
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+app.UseRequestLogging();
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
+app.UseStaticFiles(); 
+app.UseRouting(); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
